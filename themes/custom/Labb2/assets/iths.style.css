@@ -1,0 +1,12 @@
+
+
+.good {
+    border: 1px green solid;
+}
+.not_good {
+    border: 1px red solid;
+}
+
+.navbar {
+    background: #22C4FD;
+}

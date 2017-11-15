@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Theme functions.
+ */
+
+ /**
+  * Implements hook_preprocess_node() for node.html.twig.
+  *
+  * Every node type should implement their own preprocess function.
+  * e.g. brg_preprocess_node_<type>
+  *
+  * Always declare the variables you use to FALSE for easy checks in the template
+  * files. If you don't populate the variable it will just remain FALSE.
+  *
+  * We use entity_metadata_wrapper() for getting data (e.g. fields) about the
+  * node.
+  * @see https://www.drupal.org/documentation/entity-metadata-wrappers
+  */
+ function iths_preprocess_node(&$vars) {
+    $node = $vars['node'];
+    $function = 'iths_preprocess_node_' . $node->getType();
+
+    if (function_exists($function)) {
+        $function($vars, $node);
+    }
+}
+
+function iths_preprocess_node_movie(&$vars, $node) {
+    $class = '';
+    if ($node->get('field_favorit')->value) {
+        if (!isset($vars['attributes']['class'])) {
+            $vars['attributes']['class'] = [];
+        }
+        $class = $node->get('field_favorit')->value;
+        $vars['attributes']['class'] = array_merge($vars['attributes']['class'], [$class]);
+    }
+}
+
+function iths_preprocess_node_landingpage(&$vars, $node)
+{
+    $vars += [
+        'movie_teasers' => FALSE
+    ];
+    $vars["movie_teasers"] = views_embed_view('movies', 'embed_movie_teasers');
+}
